@@ -182,18 +182,143 @@ downloadCSS.onclick = () => {
   --message-bg: ${styles.getPropertyValue("--message-bg")};
   --font-family: ${styles.getPropertyValue("--font-family")};
   --top-image: ${styles.getPropertyValue("--top-image")};
+  --border-color: #000000;
+}`+`
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
 }
 
 body {
-  background: ${doc.body.style.background};
-  color: ${doc.body.style.color};
-  font-family: var(--font-family);
-  font-size: ${doc.body.style.fontSize};
-  overflow: hidden;
+  
+    background: {background_color};
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: {font_size};
+    line-height: .5em;
+    color: {text_color};
 }
-`.trim();
 
-  downloadFile("base.css", css);
+#log>div {
+    animation: fadeInRight .3s ease forwards, fadeOut 0.5s ease {message_hide_delay} forwards;
+    -webkit-animation: fadeInRight .3s ease forwards, fadeOut 0.5s ease {message_hide_delay} forwards;
+}
+
+.colon {
+    display: none;
+}
+
+#log {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 0 10px 10px;
+    width: 100%;
+}
+
+#log>div {
+}
+
+#log>div.deleted {
+    visibility: hidden;
+}
+
+#log .emote {
+  	background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    padding: 0.4em 0.2em;
+    position: relative;
+}
+
+#log .emote img {
+    display: inline-block;
+    height: 1em;
+    opacity: 0;
+}
+
+#log .messagebox,#log .meta {
+  
+    vertical-align: top;
+    display: table-cell;
+    padding-bottom: 0.1em;
+}
+
+
+
+#log .userbox {
+  	display: inline;
+   	background: var(--username-bg);
+  	border-radius: 0px 15px 15px 15px;
+    padding: 0.8em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border: 3px solid var(--border-color);
+  	box-shadow: 3px 3px 0px var(--border-color);
+}
+
+#log .userbox::after {
+  content: '';
+  display: inline-block;
+  position: relative;
+  left: 1%;
+  bottom: 20;
+  width: 3.85rem;
+  height: 5rem;
+  margin: -1.5rem 0 0 0; 
+  background: var(--top-image) no-repeat center left;
+  background-size: contain;
+}
+#log .messagebox {/*mensaje*/
+    position: relative;
+   	left: 10%;
+  	color:#2d3436;
+  	background: var(--message-bg);
+  	padding: 1em 1em 0.8em 0.8em;
+  	border-radius: 15px 15px 15px 15px;
+    word-wrap: break-word;
+    width: 90%;
+  	border: 3px solid var(--border-color);
+   	box-shadow: 3px 3px 0px var(--border-color);
+  
+}
+#log .messagebox:after {/*mensaje*/
+  	content: '';
+  	position: absolute;
+  	left: 0;
+		top: 50%;
+		width: 10;
+		height: 0;
+		border: 31px solid transparent;
+		border-right-color: #dfe6e9;
+		border-left: 0;
+		border-top: 0;
+		margin-top: -15.5px;
+		margin-left: -31px;
+}
+.badge {
+  
+    display: inline-block;
+    margin-right: 0.2m;
+    position: relative;
+    height: 1em;
+    vertical-align: middle;
+    top: -0.1em;
+}
+
+.name {
+    margin-left: 0.2em;
+}
+
+    
+    `.trim();
+
+  downloadFile("css.txt", css);
 };
 
 /* -------------------------
