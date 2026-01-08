@@ -149,6 +149,13 @@
     <iframe id="preview" src="preview.html"></iframe>
   </div>
 
+<select id="preset">
+  <option value="">Select preset</option>
+  <option value="classic">Classic Blue</option>
+  <option value="dark">Dark Neon</option>
+  <option value="pink">VTuber Pink</option>
+</select>
+
   <!-- LOGIC -->
   <script>
     const iframe = document.getElementById("preview");
@@ -207,6 +214,44 @@ hideDelay.oninput = e =>
 
 spamOnce.onclick = () =>
   iframe.contentWindow.addMessage();
+const presets = {
+  classic: {
+    "--background-color": "#000000",
+    "--text-color": "#ffffff",
+    "--username-bg": "#0097e6",
+    "--message-bg": "#dfe6e9",
+    "--font-size": "28px",
+    "--font-family": "Teko",
+    "--top-image": 'url("https://i.imgur.com/ozpwiJC.png")'
+  },
+  dark: {
+    "--background-color": "#0f0f1a",
+    "--text-color": "#9efcff",
+    "--username-bg": "#6c5ce7",
+    "--message-bg": "#1e1e2e",
+    "--font-size": "30px",
+    "--font-family": "Roboto",
+    "--top-image": 'url("https://i.imgur.com/3ZUrjUP.png")'
+  },
+  pink: {
+    "--background-color": "#2d0f1e",
+    "--text-color": "#ffd6e7",
+    "--username-bg": "#ff6fae",
+    "--message-bg": "#ffeaf3",
+    "--font-size": "32px",
+    "--font-family": "Teko",
+    "--top-image": 'url("https://i.imgur.com/YOURIMAGE.png")'
+  }
+};
+
+preset.onchange = e => {
+  const theme = presets[e.target.value];
+  if (!theme) return;
+
+  for (const key in theme) {
+    setVar(key, theme[key]);
+  }
+};
 
   </script>
 
