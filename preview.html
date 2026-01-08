@@ -65,7 +65,17 @@
     }
 
     // Spam messages automatically
-    setInterval(addMessage, 2000);
+    let speed = 2000;
+let interval = setInterval(addMessage, speed);
+
+window.setSpeed = (newSpeed) => {
+  speed = newSpeed;
+  clearInterval(interval);
+  interval = setInterval(addMessage, speed);
+};
+
+window.addMessage = addMessage;
+
   </script>
 
 </body>
