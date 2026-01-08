@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chat Overlay Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- UI styling only -->
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #0f1220;
+      color: #fff;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      height: 100vh;
+    }
+
+    .controls {
+      padding: 16px;
+      overflow-y: auto;
+      background: #161a33;
+      border-right: 1px solid #2a2f55;
+    }
+
+    .controls h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+    }
+
+    .control {
+      margin-bottom: 14px;
+    }
+
+    .control label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      opacity: 0.85;
+    }
+
+    .control input,
+    .control select {
+      width: 100%;
+      padding: 6px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    .preview {
+      background: #000;
+      position: relative;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #5f7cff;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #738cff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <h2>Chat Generator</h2>
+
+    <div class="control">
+      <label>Background color</label>
+      <input type="color" id="bgColor" value="#000000">
+    </div>
+
+    <div class="control">
+      <label>Text color</label>
+      <input type="color" id="textColor" value="#ffffff">
+    </div>
+
+    <div class="control">
+      <label>Username background</label>
+      <input type="color" id="userBg" value="#0097e6">
+    </div>
+
+    <div class="control">
+      <label>Message background</label>
+      <input type="color" id="messageBg" value="#dfe6e9">
+    </div>
+
+    <div class="control">
+      <label>Font size (px)</label>
+      <input type="number" id="fontSize" value="28" min="10" max="80">
+    </div>
+
+    <div class="control">
+      <label>Font family</label>
+      <select id="fontFamily">
+        <option value="Teko">Teko</option>
+        <option value="Roboto">Roboto</option>
+        <option value="Arial">Arial</option>
+        <option value="Comic Sans MS">Comic Sans (why)</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <label>Top image URL</label>
+      <input type="text" id="topImage"
+        value="https://i.imgur.com/ozpwiJC.png">
+    </div>
+
+    <button id="copyCSS">Copy CSS variables</button>
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="preview">
+    <iframe id="preview" src="preview.html"></iframe>
+  </div>
+
+  <!-- LOGIC -->
+  <script>
+    const iframe = document.getElementById("preview");
+
+    function setVar(name, value) {
+      const doc = iframe.contentWindow.document;
+      doc.documentElement.style.setProperty(name, value);
+    }
+
+    iframe.addEventListener("load", () => {
+      // Color controls
+      bgColor.oninput = e => setVar("--background-color", e.target.value);
+      textColor.oninput = e => setVar("--text-color", e.target.value);
+      userBg.oninput = e => setVar("--username-bg", e.target.value);
+      messageBg.oninput = e => setVar("--message-bg", e.target.value);
+
+      // Font size
+      fontSize.oninput = e =>
+        setVar("--font-size", `${e.target.value}px`);
+
+      // Font family
+      fontFamily.onchange = e =>
+        setVar("--font-family", e.target.value);
+
+      // Image
+      topImage.oninput = e =>
+        setVar("--top-image", `url("${e.target.value}")`);
+    });
+
+    copyCSS.onclick = () => {
+      const styles = getComputedStyle(
+        iframe.contentWindow.document.documentElement
+      );
+
+      const css = `
+:root {
+  --background-color: ${styles.getPropertyValue("--background-color")};
+  --text-color: ${styles.getPropertyValue("--text-color")};
+  --username-bg: ${styles.getPropertyValue("--username-bg")};
+  --message-bg: ${styles.getPropertyValue("--message-bg")};
+  --font-size: ${styles.getPropertyValue("--font-size")};
+  --font-family: ${styles.getPropertyValue("--font-family")};
+  --top-image: ${styles.getPropertyValue("--top-image")};
+}
+`.trim();
+
+      navigator.clipboard.writeText(css);
+      alert("CSS copied!");
+    };
+  </script>
+
+</body>
+</html>
