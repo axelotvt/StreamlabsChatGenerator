@@ -4,19 +4,25 @@
   <meta charset="UTF-8">
   <title>Chat Preview</title>
 
-  <!-- Google Fonts (more can be added later) -->
+  <!-- Google Font used by overlay -->
   <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- Core styles -->
   <link rel="stylesheet" href="base.css">
+
+  <!-- Preview-only overrides -->
+  <style>
+    body {
+      background: transparent;
+      font-size: 28px;
+      color: #2d3436;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Chat log -->
   <div id="log" class="sl__chat__layout"></div>
 
-  <!-- Message template (unchanged from your original) -->
   <script type="text/template" id="chatlist_item">
     <div data-from="{from}" data-id="{messageId}">
       <span class="userbox">
@@ -30,7 +36,6 @@
     </div>
   </script>
 
-  <!-- Fake chat generator -->
   <script>
     const log = document.getElementById("log");
     const template = document.getElementById("chatlist_item").innerHTML;
@@ -55,27 +60,23 @@
 
       const wrapper = document.createElement("div");
       wrapper.innerHTML = html;
-
       log.appendChild(wrapper.firstElementChild);
 
-      // Remove old messages
       if (log.children.length > 6) {
         log.removeChild(log.firstElementChild);
       }
     }
 
-    // Spam messages automatically
     let speed = 2000;
-let interval = setInterval(addMessage, speed);
+    let interval = setInterval(addMessage, speed);
 
-window.setSpeed = (newSpeed) => {
-  speed = newSpeed;
-  clearInterval(interval);
-  interval = setInterval(addMessage, speed);
-};
+    window.setSpeed = (newSpeed) => {
+      speed = newSpeed;
+      clearInterval(interval);
+      interval = setInterval(addMessage, speed);
+    };
 
-window.addMessage = addMessage;
-
+    window.addMessage = addMessage;
   </script>
 
 </body>
