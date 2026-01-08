@@ -201,18 +201,26 @@ body {
 -------------------------- */
 downloadHTML.onclick = () => {
   const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <link rel="stylesheet" href="base.css">
-</head>
-<body>
-<div id="log"></div>
-</body>
-</html>
+<!-- item will be appened to this layout -->
+<div id="log" class="sl__chat__layout">
+</div>
+
+<script type="text/template" id="chatlist_item">
+  <div data-from="{from}" data-id="{messageId}">
+    <span class="userbox">
+      <span class="badges">
+      </span>
+      <span class="name">{from}</span>
+    </span>
+
+    <span class="messagebox">
+      {message}
+    </span>
+  </div>
+</script>
 `.trim();
 
-  downloadFile("chat.html", html);
+  downloadFile("html.txt", html);
 };
 </script>
 
