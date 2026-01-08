@@ -1,11 +1,10 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Chat Overlay Generator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- UI styling only -->
   <style>
     * {
       box-sizing: border-box;
@@ -73,61 +72,74 @@
       color: #fff;
       font-weight: bold;
       cursor: pointer;
+      margin-top: 8px;
     }
 
     button:hover {
       background: #738cff;
     }
+
+    hr {
+      border: none;
+      border-top: 1px solid #2a2f55;
+      margin: 16px 0;
+    }
   </style>
 </head>
 <body>
 
-  <!-- CONTROLS -->
-  <div class="controls">
-    <h2>Chat Generator</h2>
+<!-- ================= CONTROLS ================= -->
+<div class="controls">
+  <h2>Chat Generator</h2>
 
-    <div class="control">
-      <label>Background color</label>
-      <input type="color" id="bgColor" value="#000000">
-    </div>
+  <div class="control">
+    <label>Background color</label>
+    <input type="color" id="bgColor" value="#000000">
+  </div>
 
-    <div class="control">
-      <label>Text color</label>
-      <input type="color" id="textColor" value="#ffffff">
-    </div>
+  <div class="control">
+    <label>Text color</label>
+    <input type="color" id="textColor" value="#ffffff">
+  </div>
 
-    <div class="control">
-      <label>Username background</label>
-      <input type="color" id="userBg" value="#0097e6">
-    </div>
+  <div class="control">
+    <label>Username background</label>
+    <input type="color" id="userBg" value="#0097e6">
+  </div>
 
-    <div class="control">
-      <label>Message background</label>
-      <input type="color" id="messageBg" value="#dfe6e9">
-    </div>
+  <div class="control">
+    <label>Message background</label>
+    <input type="color" id="messageBg" value="#dfe6e9">
+  </div>
 
-    <div class="control">
-      <label>Font size (px)</label>
-      <input type="number" id="fontSize" value="28" min="10" max="80">
-    </div>
+  <div class="control">
+    <label>Font size (px)</label>
+    <input type="number" id="fontSize" value="28" min="10" max="80">
+  </div>
 
-    <div class="control">
-      <label>Font family</label>
-      <select id="fontFamily">
-        <option value="Teko">Teko</option>
-        <option value="Roboto">Roboto</option>
-        <option value="Arial">Arial</option>
-        <option value="Comic Sans MS">Comic Sans (why)</option>
-      </select>
-    </div>
+  <div class="control">
+    <label>Font family</label>
+    <select id="fontFamily">
+      <option value="Teko">Teko</option>
+      <option value="Roboto">Roboto</option>
+      <option value="Arial">Arial</option>
+      <option value="Comic Sans MS">Comic Sans (why)</option>
+    </select>
+  </div>
 
-    <div class="control">
-      <label>Top image URL</label>
-      <input type="text" id="topImage"
-        value="https://i.imgur.com/ozpwiJC.png">
-    </div>
+  <div class="control">
+    <label>Top image URL</label>
+    <input type="text" id="topImage" value="https://i.imgur.com/ozpwiJC.png">
+  </div>
 
-    <button id="copyCSS">Copy CSS variables</button>
+  <div class="control">
+    <label>Preset</label>
+    <select id="preset">
+      <option value="">Select preset</option>
+      <option value="classic">Classic Blue</option>
+      <option value="dark">Dark Neon</option>
+      <option value="pink">VTuber Pink</option>
+    </select>
   </div>
 
   <hr>
@@ -143,117 +155,100 @@
   </div>
 
   <button id="spamOnce">Add message</button>
+</div>
 
-  <!-- PREVIEW -->
-  <div class="preview">
-    <iframe id="preview" src="preview.html"></iframe>
-  </div>
+<!-- ================= PREVIEW ================= -->
+<div class="preview">
+  <iframe id="preview" src="preview.html"></iframe>
+</div>
 
-<select id="preset">
-  <option value="">Select preset</option>
-  <option value="classic">Classic Blue</option>
-  <option value="dark">Dark Neon</option>
-  <option value="pink">VTuber Pink</option>
-</select>
+<!-- ================= LOGIC ================= -->
+<script>
+  const iframe = document.getElementById("preview");
 
-  <!-- LOGIC -->
-  <script>
-    const iframe = document.getElementById("preview");
+  const setVar = (name, value) => {
+    iframe.contentWindow.document.documentElement
+      .style.setProperty(name, value);
+  };
 
-    function setVar(name, value) {
-      const doc = iframe.contentWindow.document;
-      doc.documentElement.style.setProperty(name, value);
-    }
+  iframe.addEventListener("load", () => {
 
-    iframe.addEventListener("load", () => {
-      // Color controls
-      bgColor.oninput = e => setVar("--background-color", e.target.value);
-      textColor.oninput = e => setVar("--text-color", e.target.value);
-      userBg.oninput = e => setVar("--username-bg", e.target.value);
-      messageBg.oninput = e => setVar("--message-bg", e.target.value);
+    bgColor.oninput = e =>
+      iframe.contentWindow.document.body.style.background = e.target.value;
 
-      // Font size
-      fontSize.oninput = e =>
-        setVar("--font-size", `${e.target.value}px`);
+    textColor.oninput = e =>
+      iframe.contentWindow.document.body.style.color = e.target.value;
 
-      // Font family
-      fontFamily.onchange = e =>
-        setVar("--font-family", e.target.value);
+    fontSize.oninput = e =>
+      iframe.contentWindow.document.body.style.fontSize = `${e.target.value}px`;
 
-      // Image
-      topImage.oninput = e =>
-        setVar("--top-image", `url("${e.target.value}")`);
-    });
+    userBg.oninput = e => setVar("--username-bg", e.target.value);
+    messageBg.oninput = e => setVar("--message-bg", e.target.value);
+    fontFamily.onchange = e => setVar("--font-family", e.target.value);
 
-    copyCSS.onclick = () => {
-      const styles = getComputedStyle(
-        iframe.contentWindow.document.documentElement
-      );
+    topImage.oninput = e =>
+      setVar("--top-image", `url("${e.target.value}")`);
 
-      const css = `
-:root {
-  --background-color: ${styles.getPropertyValue("--background-color")};
-  --text-color: ${styles.getPropertyValue("--text-color")};
-  --username-bg: ${styles.getPropertyValue("--username-bg")};
-  --message-bg: ${styles.getPropertyValue("--message-bg")};
-  --font-size: ${styles.getPropertyValue("--font-size")};
-  --font-family: ${styles.getPropertyValue("--font-family")};
-  --top-image: ${styles.getPropertyValue("--top-image")};
-}
-`.trim();
-
-      navigator.clipboard.writeText(css);
-      alert("CSS copied!");
-    };
+    hideDelay.oninput = e =>
+      iframe.contentWindow.setHideDelay?.(`${e.target.value}s`);
 
     msgSpeed.oninput = e =>
-  iframe.contentWindow.setSpeed(Number(e.target.value));
+      iframe.contentWindow.setSpeed(Number(e.target.value));
 
-hideDelay.oninput = e =>
-  setVar("--message-hide-delay", `${e.target.value}s`);
+    spamOnce.onclick = () =>
+      iframe.contentWindow.addMessage();
+  });
 
-spamOnce.onclick = () =>
-  iframe.contentWindow.addMessage();
-const presets = {
-  classic: {
-    "--background-color": "#000000",
-    "--text-color": "#ffffff",
-    "--username-bg": "#0097e6",
-    "--message-bg": "#dfe6e9",
-    "--font-size": "28px",
-    "--font-family": "Teko",
-    "--top-image": 'url("https://i.imgur.com/ozpwiJC.png")'
-  },
-  dark: {
-    "--background-color": "#0f0f1a",
-    "--text-color": "#9efcff",
-    "--username-bg": "#6c5ce7",
-    "--message-bg": "#1e1e2e",
-    "--font-size": "30px",
-    "--font-family": "Roboto",
-    "--top-image": 'url("https://i.imgur.com/3ZUrjUP.png")'
-  },
-  pink: {
-    "--background-color": "#2d0f1e",
-    "--text-color": "#ffd6e7",
-    "--username-bg": "#ff6fae",
-    "--message-bg": "#ffeaf3",
-    "--font-size": "32px",
-    "--font-family": "Teko",
-    "--top-image": 'url("https://i.imgur.com/YOURIMAGE.png")'
-  }
-};
+  const presets = {
+    classic: {
+      bg: "#000000",
+      text: "#ffffff",
+      "--username-bg": "#0097e6",
+      "--message-bg": "#dfe6e9",
+      size: 28,
+      font: "Teko",
+      img: "https://i.imgur.com/ozpwiJC.png"
+    },
+    dark: {
+      bg: "#0f0f1a",
+      text: "#9efcff",
+      "--username-bg": "#6c5ce7",
+      "--message-bg": "#1e1e2e",
+      size: 30,
+      font: "Roboto",
+      img: "https://i.imgur.com/3ZUrjUP.png"
+    },
+    pink: {
+      bg: "#2d0f1e",
+      text: "#ffd6e7",
+      "--username-bg": "#ff6fae",
+      "--message-bg": "#ffeaf3",
+      size: 32,
+      font: "Teko",
+      img: "https://i.imgur.com/YOURIMAGE.png"
+    }
+  };
 
-preset.onchange = e => {
-  const theme = presets[e.target.value];
-  if (!theme) return;
+  preset.onchange = e => {
+    const p = presets[e.target.value];
+    if (!p) return;
 
-  for (const key in theme) {
-    setVar(key, theme[key]);
-  }
-};
+    bgColor.value = p.bg;
+    textColor.value = p.text;
+    fontSize.value = p.size;
+    fontFamily.value = p.font;
+    topImage.value = p.img;
 
-  </script>
+    iframe.contentWindow.document.body.style.background = p.bg;
+    iframe.contentWindow.document.body.style.color = p.text;
+    iframe.contentWindow.document.body.style.fontSize = `${p.size}px`;
+
+    setVar("--username-bg", p["--username-bg"]);
+    setVar("--message-bg", p["--message-bg"]);
+    setVar("--font-family", p.font);
+    setVar("--top-image", `url("${p.img}")`);
+  };
+</script>
 
 </body>
 </html>
