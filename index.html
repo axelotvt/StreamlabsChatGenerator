@@ -86,6 +86,11 @@
     <input type="color" id="textColor" value="#ffffff">
   </div>
 
+	<div class="control">
+	<label>Message Color</label>
+	<input type="color" id="messageColor" value="#2d3436">
+  </div>
+
   <div class="control">
     <label>Username background</label>
     <input type="color" id="userBg" value="#0097e6">
@@ -154,8 +159,11 @@ iframe.addEventListener("load", () => {
 
   textColor.oninput = e =>
     iframe.contentWindow.document.body.style.color = e.target.value;
-
-  fontSize.oninput = e =>
+  
+	messageColor.oninput = e =>
+  	setVar("--message-color", e.target.value);
+  
+	fontSize.oninput = e =>
     iframe.contentWindow.document.body.style.fontSize = `${e.target.value}px`;
 
   userBg.oninput = e => setVar("--username-bg", e.target.value);
@@ -183,6 +191,7 @@ downloadCSS.onclick = () => {
   --font-family: ${styles.getPropertyValue("--font-family")};
   --top-image: ${styles.getPropertyValue("--top-image")};
   --border-color: #000000;
+  	--message-color: ${styles.getPropertyValue("--message-color")};
 }`+`
 * {
     box-sizing: border-box;
@@ -277,7 +286,7 @@ body {
 #log .messagebox {/*mensaje*/
     position: relative;
    	left: 10%;
-  	color:#2d3436;
+  	color:var(--message-color);
   	background: var(--message-bg);
   	padding: 1em 1em 0.8em 0.8em;
   	border-radius: 15px 15px 15px 15px;
