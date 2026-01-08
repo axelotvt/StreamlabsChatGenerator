@@ -6,7 +6,7 @@
   	--message-bg: #dfe6e9;
   	--border-color: #000000;
   	--top-image: url("https://i.imgur.com/ozpwiJC.png");
-	--msgboxtxt-color: #2d3436;
+	--message-color: #2d3436;
 }
 
 
@@ -103,7 +103,7 @@ body {
 #log .messagebox {/*mensaje*/
     position: relative;
    	left: 10%;
-  	color:var(--msgboxtxt-color);
+  	color: var(--message-color);
   	background: var(--message-bg);
   	padding: 1em 1em 0.8em 0.8em;
   	border-radius: 15px 15px 15px 15px;
