@@ -1,0 +1,142 @@
+/* ===============================
+   CSS VARIABLES (controlled by editor)
+================================= */
+:root {
+  --background-color: #000000;
+  --text-color: #ffffff;
+  --font-size: 28px;
+  --font-family: "Teko", sans-serif;
+
+  --username-bg: #0097e6;
+  --message-bg: #dfe6e9;
+  --border-color: #000000;
+
+  --top-image: url("https://i.imgur.com/ozpwiJC.png");
+  --message-hide-delay: 10s;
+}
+
+/* ===============================
+   RESET / BASE
+================================= */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--background-color);
+  font-family: var(--font-family);
+  font-weight: 700;
+  font-size: var(--font-size);
+  line-height: 1.2em;
+  color: var(--text-color);
+}
+
+/* ===============================
+   CHAT LAYOUT
+================================= */
+#log {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 0 10px 10px;
+  width: 100%;
+}
+
+#log > div {
+  margin-top: 10px;
+  animation:
+    fadeInRight .3s ease forwards,
+    fadeOut .5s ease var(--message-hide-delay) forwards;
+}
+
+#log > div.deleted {
+  visibility: hidden;
+}
+
+/* ===============================
+   USERNAME BOX
+================================= */
+.userbox {
+  display: inline-block;
+  background: var(--username-bg);
+  border-radius: 0px 15px 15px 15px;
+  padding: 0.8em;
+  white-space: nowrap;
+  border: 3px solid var(--border-color);
+  box-shadow: 3px 3px 0px var(--border-color);
+}
+
+.userbox::after {
+  content: '';
+  display: inline-block;
+  position: relative;
+  left: 4px;
+  width: 3.8rem;
+  height: 4.5rem;
+  margin: -1.5rem 0 0 0;
+  background: var(--top-image) no-repeat center left;
+  background-size: contain;
+}
+
+.name {
+  margin-left: 0.2em;
+}
+
+/* ===============================
+   MESSAGE BOX
+================================= */
+.messagebox {
+  display: block;
+  position: relative;
+  left: 10%;
+  margin-top: 6px;
+
+  color: #2d3436;
+  background: var(--message-bg);
+  padding: 1em 1em 0.8em 0.8em;
+  border-radius: 15px;
+
+  width: 90%;
+  word-wrap: break-word;
+
+  border: 3px solid var(--border-color);
+  box-shadow: 3px 3px 0px var(--border-color);
+}
+
+.messagebox::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  border: 20px solid transparent;
+  border-right-color: var(--message-bg);
+  border-left: 0;
+  border-top: 0;
+  margin-top: -10px;
+  margin-left: -20px;
+}
+
+/* ===============================
+   ANIMATIONS
+================================= */
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
