@@ -54,7 +54,7 @@
 
     function addMessage() {
       const html = template
-        .replace("{from}", users[Math.floor(Math.random() * users.length)])
+        .replaceAll("{from}", users[Math.floor(Math.random() * users.length)])
         .replace("{message}", messages[Math.floor(Math.random() * messages.length)])
         .replace("{messageId}", ++id);
 
