@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Preview</title>
+
+  <!-- Google Fonts (more can be added later) -->
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Core styles -->
+  <link rel="stylesheet" href="base.css">
+</head>
+<body>
+
+  <!-- Chat log -->
+  <div id="log" class="sl__chat__layout"></div>
+
+  <!-- Message template (unchanged from your original) -->
+  <script type="text/template" id="chatlist_item">
+    <div data-from="{from}" data-id="{messageId}">
+      <span class="userbox">
+        <span class="badges"></span>
+        <span class="name">{from}</span>
+      </span>
+
+      <span class="messagebox">
+        {message}
+      </span>
+    </div>
+  </script>
+
+  <!-- Fake chat generator -->
+  <script>
+    const log = document.getElementById("log");
+    const template = document.getElementById("chatlist_item").innerHTML;
+
+    const users = ["AxelotlVT", "ShadowLink", "PixelFox", "Luna", "ChatGoblin"];
+    const messages = [
+      "HELLO CHAT 👀",
+      "this overlay looks sick",
+      "pog",
+      "AXOLOTL POWER",
+      "no sabo inglés pero ta bonito",
+      "🔥🔥🔥"
+    ];
+
+    let id = 0;
+
+    function addMessage() {
+      const html = template
+        .replace("{from}", users[Math.floor(Math.random() * users.length)])
+        .replace("{message}", messages[Math.floor(Math.random() * messages.length)])
+        .replace("{messageId}", ++id);
+
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = html;
+
+      log.appendChild(wrapper.firstElementChild);
+
+      // Remove old messages
+      if (log.children.length > 6) {
+        log.removeChild(log.firstElementChild);
+      }
+    }
+
+    // Spam messages automatically
+    setInterval(addMessage, 2000);
+  </script>
+
+</body>
+</html>
