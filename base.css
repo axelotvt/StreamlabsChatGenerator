@@ -1,11 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap');
 
 :root {
-  --font-family: "Teko", sans-serif;
-  --username-bg: #0097e6;
-  --message-bg: #dfe6e9;
-  --border-color: #000000;
-  --top-image: url("https://i.imgur.com/ozpwiJC.png");
+  	--font-family: "Teko", sans-serif;
+  	--username-bg: #0097e6;
+  	--message-bg: #dfe6e9;
+  	--border-color: #000000;
+  	--top-image: url("https://i.imgur.com/ozpwiJC.png");
+	--msgboxtxt-color: #2d3436;
 }
 
 
@@ -102,7 +103,7 @@ body {
 #log .messagebox {/*mensaje*/
     position: relative;
    	left: 10%;
-  	color:#2d3436;
+  	color:var(--msgboxtxt-color);
   	background: var(--message-bg);
   	padding: 1em 1em 0.8em 0.8em;
   	border-radius: 15px 15px 15px 15px;
