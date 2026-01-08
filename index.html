@@ -27,56 +27,40 @@
       border-right: 1px solid #2a2f55;
     }
 
-    .controls h2 {
-      margin-top: 0;
-      font-size: 1.2rem;
-    }
-
     .control {
       margin-bottom: 14px;
     }
 
-    .control label {
+    label {
       display: block;
       font-size: 0.85rem;
       margin-bottom: 4px;
       opacity: 0.85;
     }
 
-    .control input,
-    .control select {
+    input, select, button {
       width: 100%;
-      padding: 6px;
+      padding: 8px;
       border-radius: 6px;
       border: none;
     }
 
-    .preview {
-      background: #000;
-      position: relative;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: transparent;
-    }
-
     button {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
+      margin-top: 8px;
       background: #5f7cff;
       color: #fff;
       font-weight: bold;
       cursor: pointer;
-      margin-top: 8px;
     }
 
     button:hover {
       background: #738cff;
+    }
+
+    .preview iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
 
     hr {
@@ -86,9 +70,9 @@
     }
   </style>
 </head>
+
 <body>
 
-<!-- ================= CONTROLS ================= -->
 <div class="controls">
   <h2>Chat Generator</h2>
 
@@ -113,8 +97,8 @@
   </div>
 
   <div class="control">
-    <label>Font size (px)</label>
-    <input type="number" id="fontSize" value="28" min="10" max="80">
+    <label>Font size</label>
+    <input type="number" id="fontSize" value="28">
   </div>
 
   <div class="control">
@@ -123,150 +107,68 @@
       <option value="Teko">Teko</option>
       <option value="Roboto">Roboto</option>
       <option value="Arial">Arial</option>
-      <option value="Comic Sans MS">Comic Sans (why)</option>
     </select>
   </div>
 
   <div class="control">
     <label>Top image URL</label>
-    <input type="text" id="topImage" value="https://i.imgur.com/ozpwiJC.png">
-  </div>
-
-  <div class="control">
-    <label>Preset</label>
-    <select id="preset">
-      <option value="">Select preset</option>
-      <option value="classic">Classic Blue</option>
-      <option value="dark">Dark Neon</option>
-      <option value="pink">VTuber Pink</option>
-    </select>
+    <input id="topImage" value="https://i.imgur.com/ozpwiJC.png">
   </div>
 
   <hr>
 
-  <div class="control">
-    <label>Message speed (ms)</label>
-    <input type="range" id="msgSpeed" min="500" max="5000" step="250" value="2000">
-  </div>
-
-  <div class="control">
-    <label>Message hide delay (seconds)</label>
-    <input type="range" id="hideDelay" min="3" max="30" step="1" value="10">
-  </div>
-
   <button id="spamOnce">Add message</button>
   <button id="downloadCSS">Download base.css</button>
   <button id="downloadHTML">Download chat.html</button>
-
 </div>
 
-<!-- ================= PREVIEW ================= -->
 <div class="preview">
   <iframe id="preview" src="preview.html"></iframe>
 </div>
 
-<!-- ================= LOGIC ================= -->
 <script>
-  const iframe = document.getElementById("preview");
+const iframe = document.getElementById("preview");
 
-  const setVar = (name, value) => {
-    iframe.contentWindow.document.documentElement
-      .style.setProperty(name, value);
-  };
+/* -------------------------
+   Helpers
+-------------------------- */
+function setVar(name, value) {
+  iframe.contentWindow.document.documentElement.style.setProperty(name, value);
+}
 
-  iframe.addEventListener("load", () => {
-
-    bgColor.oninput = e =>
-      iframe.contentWindow.document.body.style.background = e.target.value;
-
-    textColor.oninput = e =>
-      iframe.contentWindow.document.body.style.color = e.target.value;
-
-    fontSize.oninput = e =>
-      iframe.contentWindow.document.body.style.fontSize = `${e.target.value}px`;
-
-    userBg.oninput = e => setVar("--username-bg", e.target.value);
-    messageBg.oninput = e => setVar("--message-bg", e.target.value);
-    fontFamily.onchange = e => setVar("--font-family", e.target.value);
-
-    topImage.oninput = e =>
-      setVar("--top-image", `url("${e.target.value}")`);
-
-    hideDelay.oninput = e =>
-      iframe.contentWindow.setHideDelay?.(`${e.target.value}s`);
-
-    msgSpeed.oninput = e =>
-      iframe.contentWindow.setSpeed(Number(e.target.value));
-
-    spamOnce.onclick = () =>
-      iframe.contentWindow.addMessage();
-  });
-
-  const presets = {
-    classic: {
-      bg: "#000000",
-      text: "#ffffff",
-      "--username-bg": "#0097e6",
-      "--message-bg": "#dfe6e9",
-      size: 28,
-      font: "Teko",
-      img: "https://i.imgur.com/ozpwiJC.png"
-    },
-    dark: {
-      bg: "#0f0f1a",
-      text: "#9efcff",
-      "--username-bg": "#6c5ce7",
-      "--message-bg": "#1e1e2e",
-      size: 30,
-      font: "Roboto",
-      img: "https://i.imgur.com/3ZUrjUP.png"
-    },
-    pink: {
-      bg: "#2d0f1e",
-      text: "#ffd6e7",
-      "--username-bg": "#ff6fae",
-      "--message-bg": "#ffeaf3",
-      size: 32,
-      font: "Teko",
-      img: "https://i.imgur.com/YOURIMAGE.png"
-    }
-  };
-
-  preset.onchange = e => {
-    const p = presets[e.target.value];
-    if (!p) return;
-
-    bgColor.value = p.bg;
-    textColor.value = p.text;
-    fontSize.value = p.size;
-    fontFamily.value = p.font;
-    topImage.value = p.img;
-
-    iframe.contentWindow.document.body.style.background = p.bg;
-    iframe.contentWindow.document.body.style.color = p.text;
-    iframe.contentWindow.document.body.style.fontSize = `${p.size}px`;
-
-    setVar("--username-bg", p["--username-bg"]);
-    setVar("--message-bg", p["--message-bg"]);
-    setVar("--font-family", p.font);
-    setVar("--top-image", `url("${p.img}")`);
-  };
-  <script>
-/* ===============================
-   FILE DOWNLOAD HELPER
-================================ */
-function downloadFile(filename, content) {
+function downloadFile(name, content) {
   const blob = new Blob([content], { type: "text/plain" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = filename;
+  a.download = name;
   a.click();
   URL.revokeObjectURL(a.href);
 }
 
-/* ===============================
-   EXPORT BASE.CSS
-================================ */
+/* -------------------------
+   Preview bindings
+-------------------------- */
+iframe.addEventListener("load", () => {
+  bgColor.oninput = e =>
+    iframe.contentWindow.document.body.style.background = e.target.value;
+
+  textColor.oninput = e =>
+    iframe.contentWindow.document.body.style.color = e.target.value;
+
+  fontSize.oninput = e =>
+    iframe.contentWindow.document.body.style.fontSize = `${e.target.value}px`;
+
+  userBg.oninput = e => setVar("--username-bg", e.target.value);
+  messageBg.oninput = e => setVar("--message-bg", e.target.value);
+  fontFamily.onchange = e => setVar("--font-family", e.target.value);
+  topImage.oninput = e => setVar("--top-image", `url("${e.target.value}")`);
+
+  spamOnce.onclick = () => iframe.contentWindow.addMessage();
+});
+
+/* -------------------------
+   Export CSS
+-------------------------- */
 downloadCSS.onclick = () => {
   const doc = iframe.contentWindow.document;
   const styles = getComputedStyle(doc.documentElement);
@@ -283,106 +185,35 @@ downloadCSS.onclick = () => {
 }
 
 body {
-  margin: 0;
   background: ${doc.body.style.background};
   color: ${doc.body.style.color};
   font-family: var(--font-family);
   font-size: ${doc.body.style.fontSize};
   overflow: hidden;
 }
-
-#log {
-  padding: 12px;
-}
-
-.userbox {
-  background: var(--username-bg);
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-weight: bold;
-}
-
-.userbox::after {
-  content: '';
-  display: inline-block;
-  width: 48px;
-  height: 48px;
-  background: var(--top-image) no-repeat center;
-  background-size: contain;
-  margin-left: 6px;
-}
-
-.messagebox {
-  background: var(--message-bg);
-  padding: 6px 10px;
-  border-radius: 10px;
-  display: inline-block;
-  margin-left: 6px;
-}
-
-[data-id] {
-  margin-bottom: 10px;
-}
 `.trim();
 
   downloadFile("base.css", css);
 };
 
-/* ===============================
-   EXPORT CHAT.HTML
-================================ */
+/* -------------------------
+   Export HTML
+-------------------------- */
 downloadHTML.onclick = () => {
   const html = `
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Chat Overlay</title>
   <link rel="stylesheet" href="base.css">
 </head>
 <body>
-
-<div id="log" class="sl__chat__layout"></div>
-
-<script type="text/template" id="chatlist_item">
-  <div data-from="{from}" data-id="{messageId}">
-    <span class="userbox">
-      <span class="badges"></span>
-      <span class="name">{from}</span>
-    </span>
-    <span class="messagebox">{message}</span>
-  </div>
-</script>
-
-<script>
-  const log = document.getElementById("log");
-  const template = document.getElementById("chatlist_item").innerHTML;
-  let id = 0;
-
-  window.addMessage = (from, message) => {
-    const html = template
-      .replace("{from}", from)
-      .replace("{message}", message)
-      .replace("{messageId}", ++id);
-
-    const wrap = document.createElement("div");
-    wrap.innerHTML = html;
-    log.appendChild(wrap.firstElementChild);
-
-    if (log.children.length > 6) {
-      log.removeChild(log.firstElementChild);
-    }
-  };
-</script>
-
+<div id="log"></div>
 </body>
 </html>
 `.trim();
 
   downloadFile("chat.html", html);
 };
-</script>
-
 </script>
 
 </body>
