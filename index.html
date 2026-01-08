@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -130,6 +130,20 @@
     <button id="copyCSS">Copy CSS variables</button>
   </div>
 
+  <hr>
+
+  <div class="control">
+    <label>Message speed (ms)</label>
+    <input type="range" id="msgSpeed" min="500" max="5000" step="250" value="2000">
+  </div>
+
+  <div class="control">
+    <label>Message hide delay (seconds)</label>
+    <input type="range" id="hideDelay" min="3" max="30" step="1" value="10">
+  </div>
+
+  <button id="spamOnce">Add message</button>
+
   <!-- PREVIEW -->
   <div class="preview">
     <iframe id="preview" src="preview.html"></iframe>
@@ -184,6 +198,16 @@
       navigator.clipboard.writeText(css);
       alert("CSS copied!");
     };
+
+    msgSpeed.oninput = e =>
+  iframe.contentWindow.setSpeed(Number(e.target.value));
+
+hideDelay.oninput = e =>
+  setVar("--message-hide-delay", `${e.target.value}s`);
+
+spamOnce.onclick = () =>
+  iframe.contentWindow.addMessage();
+
   </script>
 
 </body>
