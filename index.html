@@ -38,7 +38,7 @@
       opacity: 0.85;
     }
 
-    input, select, button {
+    input, button {
       width: 100%;
       padding: 8px;
       border-radius: 6px;
@@ -77,18 +77,18 @@
   <h2>Chat Generator</h2>
 
   <div class="control">
-    <label>Background color (Preview only, change this value on streamlabs)</label>
+    <label>Background color (preview only)</label>
     <input type="color" id="bgColor" value="#000000">
   </div>
 
   <div class="control">
-    <label>Text color (Preview only, change this value on streamlabs)</label>
+    <label>Text color (preview only)</label>
     <input type="color" id="textColor" value="#ffffff">
   </div>
 
-	<div class="control">
-	<label>Message Color</label>
-	<input type="color" id="messageColor" value="#2d3436">
+  <div class="control">
+    <label>Message color</label>
+    <input type="color" id="messageColor" value="#2d3436">
   </div>
 
   <div class="control">
@@ -98,7 +98,7 @@
 
   <div class="control">
     <label>Message background</label>
-    <input type="color" id="messageBg" value="#6e9">
+    <input type="color" id="messageBg" value="#66ee99">
   </div>
 
   <div class="control">
@@ -106,10 +106,10 @@
     <input type="number" id="fontSize" value="28">
   </div>
 
-<div class="control">
-  <label>Google Font name</label>
-  <input id="googleFont" placeholder="Teko, Roboto, Poppins">
-</div>
+  <div class="control">
+    <label>Google Font name</label>
+    <input id="googleFont" placeholder="Teko, Roboto, Poppins">
+  </div>
 
   <div class="control">
     <label>Top image URL</label>
@@ -129,21 +129,22 @@
 
 <script>
 const iframe = document.getElementById("preview");
-/* -------------------------
-   googlefont
--------------------------- */
-	function loadGoogleFont(fontName) {
+
+/* =========================
+   Google Font Loader
+========================= */
+function loadGoogleFont(fontName) {
   const doc = iframe.contentWindow.document;
   const head = doc.head;
 
-  const fontId = "google-font-loader";
-  let link = doc.getElementById(fontId);
+  const id = "google-font-loader";
+  let link = doc.getElementById(id);
 
   const formatted = fontName.trim().replace(/\s+/g, "+");
 
   if (!link) {
     link = doc.createElement("link");
-    link.id = fontId;
+    link.id = id;
     link.rel = "stylesheet";
     head.appendChild(link);
   }
@@ -153,9 +154,9 @@ const iframe = document.getElementById("preview");
   setVar("--font-family", `'${fontName}', sans-serif`);
 }
 
-/* -------------------------
+/* =========================
    Helpers
--------------------------- */
+========================= */
 function setVar(name, value) {
   iframe.contentWindow.document.documentElement.style.setProperty(name, value);
 }
@@ -169,32 +170,30 @@ function downloadFile(name, content) {
   URL.revokeObjectURL(a.href);
 }
 
-/* -------------------------
+/* =========================
    Preview bindings
--------------------------- */
+========================= */
 iframe.addEventListener("load", () => {
   bgColor.oninput = e =>
     iframe.contentWindow.document.body.style.background = e.target.value;
 
   textColor.oninput = e =>
     iframe.contentWindow.document.body.style.color = e.target.value;
-  
-	messageColor.oninput = e =>
-  	setVar("--message-color", e.target.value);
-  
-	fontSize.oninput = e =>
+
+  messageColor.oninput = e =>
+    setVar("--message-color", e.target.value);
+
+  fontSize.oninput = e =>
     iframe.contentWindow.document.body.style.fontSize = `${e.target.value}px`;
 
   userBg.oninput = e => setVar("--username-bg", e.target.value);
   messageBg.oninput = e => setVar("--message-bg", e.target.value);
-  fontFamily.onchange = e => setVar("--font-family", e.target.value);
   topImage.oninput = e => setVar("--top-image", `url("${e.target.value}")`);
-  googleFont.oninput = e => {
- 	 const font = e.target.value.trim();
- 		 if (!font) return;
 
- 		 loadGoogleFont(font);
+  googleFont.onchange = e => {
+    if (e.target.value.trim()) loadGoogleFont(e.target.value);
   };
+
   spamOnce.onclick = () => iframe.contentWindow.addMessage();
 });
 
@@ -206,8 +205,10 @@ downloadCSS.onclick = () => {
   const styles = getComputedStyle(doc.documentElement);
 
   const css = `
-@import url('https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=${styles
+    .getPropertyValue("--font-family")
+    .replace(/['"]/g, "")
+    .replace(/\s+/g, "+")}:wght@300;400;500;600;700&display=swap');
 
 :root {
   --username-bg: ${styles.getPropertyValue("--username-bg")};
