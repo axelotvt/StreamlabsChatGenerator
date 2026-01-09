@@ -37,7 +37,7 @@ You can use any CSS font, including Google Fonts.
 
 ---
 
-## ✅Search for a font:
+## ✅Search for a font on https://fonts.google.com/:
 <img width="1399" height="573" alt="image" src="https://github.com/user-attachments/assets/9186e8f1-5a17-4d29-8d81-7e5a375a1feb" />
 
 ---
