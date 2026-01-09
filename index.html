@@ -106,14 +106,10 @@
     <input type="number" id="fontSize" value="28">
   </div>
 
-  <div class="control">
-    <label>Font family</label>
-    <select id="fontFamily">
-      <option value="Teko">Teko</option>
-      <option value="Roboto">Roboto</option>
-      <option value="Arial">Arial</option>
-    </select>
-  </div>
+<div class="control">
+  <label>Google Font name</label>
+  <input id="googleFont" placeholder="Teko, Roboto, Poppins">
+</div>
 
   <div class="control">
     <label>Top image URL</label>
@@ -133,6 +129,29 @@
 
 <script>
 const iframe = document.getElementById("preview");
+/* -------------------------
+   googlefont
+-------------------------- */
+	function loadGoogleFont(fontName) {
+  const doc = iframe.contentWindow.document;
+  const head = doc.head;
+
+  const fontId = "google-font-loader";
+  let link = doc.getElementById(fontId);
+
+  const formatted = fontName.trim().replace(/\s+/g, "+");
+
+  if (!link) {
+    link = doc.createElement("link");
+    link.id = fontId;
+    link.rel = "stylesheet";
+    head.appendChild(link);
+  }
+
+  link.href = `https://fonts.googleapis.com/css2?family=${formatted}:wght@300;400;500;600;700&display=swap`;
+
+  setVar("--font-family", `'${fontName}', sans-serif`);
+}
 
 /* -------------------------
    Helpers
@@ -170,7 +189,12 @@ iframe.addEventListener("load", () => {
   messageBg.oninput = e => setVar("--message-bg", e.target.value);
   fontFamily.onchange = e => setVar("--font-family", e.target.value);
   topImage.oninput = e => setVar("--top-image", `url("${e.target.value}")`);
+  googleFont.oninput = e => {
+ 	 const font = e.target.value.trim();
+ 		 if (!font) return;
 
+ 		 loadGoogleFont(font);
+  };
   spamOnce.onclick = () => iframe.contentWindow.addMessage();
 });
 
