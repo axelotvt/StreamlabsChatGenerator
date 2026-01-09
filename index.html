@@ -110,14 +110,20 @@
   </div>
 
 <div class="control">
-  <label>Chat Font</label>
+  <label>Font import (optional)</label>
   <input
-    id="fontFamily"
-    list="googleFonts"
-    placeholder="Select a font"
-    value="Teko"
-  />
-	<datalist id="googleFonts"></datalist>
+    id="fontImport"
+    placeholder="@import url('https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap');"
+  >
+</div>
+
+<div class="control">
+  <label>Font family CSS</label>
+  <input
+    id="fontFamilyCSS"
+    value='"Teko", sans-serif'
+    placeholder='"Teko", sans-serif'
+  >
 </div>
 
 
@@ -142,63 +148,30 @@
    Google Font Const
 ========================= */
 
-	const GOOGLE_FONTS = [
-  "Teko",
-  "Inter",
-  "Roboto",
-  "Montserrat",
-  "Poppins",
-  "Oswald",
-  "Nunito",
-  "Lato",
-  "Bebas Neue",
-  "Fira Sans",
-  "DM Sans",
-  "Playfair Display",
-  "Source Sans 3",
-  "Rubik",
-  "Mulish",
-  "Archivo"
-];
-
-const fontList = document.getElementById("googleFonts");
-
-GOOGLE_FONTS.forEach(font => {
-  const option = document.createElement("option");
-  option.value = font;
-  fontList.appendChild(option);
-});
-
-	const fontFamily = document.getElementById("fontFamily");
-const iframe = document.getElementById("preview");
-
-function loadGoogleFont(doc, font) {
-  const id = "googleFontLink";
-
-  let link = doc.getElementById(id);
-  if (link) link.remove();
-
-  link = doc.createElement("link");
-  link.id = id;
-  link.rel = "stylesheet";
-  link.href = `https://fonts.googleapis.com/css2?family=${font.replace(/ /g, "+")}:wght@300;400;500;600;700&display=swap`;
-
-  doc.head.appendChild(link);
-}
-
-	fontFamily.oninput = e => {
-  const font = e.target.value;
-  if (!font) return;
-
+function applyFontPreview() {
   const doc = iframe.contentWindow.document;
 
-  loadGoogleFont(doc, font);
+  const importValue = fontImport.value.trim();
+  const familyValue = fontFamilyCSS.value.trim();
 
-  doc.documentElement.style.setProperty(
-    "--font-family",
-    `'${font}', sans-serif`
-  );
-};
+  if (importValue) {
+    let style = doc.getElementById("font-import-style");
+    if (!style) {
+      style = doc.createElement("style");
+      style.id = "font-import-style";
+      doc.head.appendChild(style);
+    }
+    style.textContent = importValue;
+  }
+
+  if (familyValue) {
+    doc.documentElement.style.setProperty(
+      "--font-family",
+      familyValue
+    );
+  }
+}
+
 
 /* =========================
    Helpers
@@ -221,11 +194,10 @@ function downloadFile(name, content) {
 ========================= */
 iframe.addEventListener("load", () => {
 
-const initialFont = fontFamily.value;
-if (initialFont) {
-  loadGoogleFont(iframe.contentWindow.document, initialFont);
-  setVar("--font-family", `'${initialFont}', sans-serif`);
-}
+const importCSS = fontImport.value.trim();
+const familyCSS = fontFamilyCSS.value.trim();
+
+
 	
   bgColor.oninput = e =>
     iframe.contentWindow.document.body.style.background = e.target.value;
@@ -254,10 +226,8 @@ downloadCSS.onclick = () => {
   const styles = getComputedStyle(doc.documentElement);
 
   const css = `
-@import url('https://fonts.googleapis.com/css2?family=${styles
-    .getPropertyValue("--font-family")
-    .replace(/['"]/g, "")
-    .replace(/\s+/g, "+")}:wght@300;400;500;600;700&display=swap');
+const css = `
+${importCSS || ""}
 
 :root {
   --username-bg: ${styles.getPropertyValue("--username-bg")};
