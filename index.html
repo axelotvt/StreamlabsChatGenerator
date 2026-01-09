@@ -145,15 +145,21 @@
 
 <script>
 /* =========================
-   Google Font Const
+   DOM refs
 ========================= */
+const iframe = document.getElementById("preview");
 
+/* =========================
+   Font preview + export
+========================= */
 function applyFontPreview() {
   const doc = iframe.contentWindow.document;
+  if (!doc) return;
 
   const importValue = fontImport.value.trim();
   const familyValue = fontFamilyCSS.value.trim();
 
+  // Inject @import into preview iframe
   if (importValue) {
     let style = doc.getElementById("font-import-style");
     if (!style) {
@@ -164,14 +170,16 @@ function applyFontPreview() {
     style.textContent = importValue;
   }
 
+  // Set CSS variable
   if (familyValue) {
-    doc.documentElement.style.setProperty(
-      "--font-family",
-      familyValue
-    );
+    doc.documentElement.style.setProperty("--font-family", familyValue);
   }
 }
 
+function getFontExportCSS() {
+  const importValue = fontImport.value.trim();
+  return importValue ? importValue + "\n\n" : "";
+}
 
 /* =========================
    Helpers
@@ -193,31 +201,34 @@ function downloadFile(name, content) {
    Preview bindings
 ========================= */
 iframe.addEventListener("load", () => {
+  const doc = iframe.contentWindow.document;
 
-const importCSS = fontImport.value.trim();
-const familyCSS = fontFamilyCSS.value.trim();
+  // Initial font apply
+  applyFontPreview();
 
+  // Font inputs
+  fontImport.oninput = applyFontPreview;
+  fontFamilyCSS.oninput = applyFontPreview;
 
-	
   bgColor.oninput = e =>
-    iframe.contentWindow.document.body.style.background = e.target.value;
+    doc.body.style.background = e.target.value;
 
   textColor.oninput = e =>
-    iframe.contentWindow.document.body.style.color = e.target.value;
+    doc.body.style.color = e.target.value;
 
   messageColor.oninput = e =>
     setVar("--message-color", e.target.value);
 
   fontSize.oninput = e =>
-    iframe.contentWindow.document.body.style.fontSize = `${e.target.value}px`;
+    doc.body.style.fontSize = `${e.target.value}px`;
 
   userBg.oninput = e => setVar("--username-bg", e.target.value);
   messageBg.oninput = e => setVar("--message-bg", e.target.value);
-  topImage.oninput = e => setVar("--top-image", `url("${e.target.value}")`);
+  topImage.oninput = e =>
+    setVar("--top-image", `url("${e.target.value}")`);
 
   spamOnce.onclick = () => iframe.contentWindow.addMessage();
 });
-
 /* -------------------------
    Export CSS
 -------------------------- */
@@ -226,16 +237,16 @@ downloadCSS.onclick = () => {
   const styles = getComputedStyle(doc.documentElement);
 
   const css = `
-${importCSS || ""}
+${getFontExportCSS()}
 
 :root {
-  --username-bg: ${styles.getPropertyValue("--username-bg")};
-  --message-bg: ${styles.getPropertyValue("--message-bg")};
-  --font-family: ${styles.getPropertyValue("--font-family")};
-  --top-image: ${styles.getPropertyValue("--top-image")};
+  --username-bg: ${styles.getPropertyValue("--username-bg").trim()};
+  --message-bg: ${styles.getPropertyValue("--message-bg").trim()};
+  --message-color: ${styles.getPropertyValue("--message-color").trim()};
+  --font-family: ${styles.getPropertyValue("--font-family").trim()};
+  --top-image: ${styles.getPropertyValue("--top-image").trim()};
   --border-color: #000000;
-  	--message-color: ${styles.getPropertyValue("--message-color")};
-}`+`
+}
 * {
     box-sizing: border-box;
 }
