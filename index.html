@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,10 +109,17 @@
     <input type="number" id="fontSize" value="28">
   </div>
 
-  <div class="control">
-    <label>Google Font name</label>
-    <input id="googleFont" placeholder="Teko, Roboto, Poppins">
-  </div>
+<div class="control">
+  <label>Chat Font</label>
+  <input
+    id="fontFamily"
+    list="googleFonts"
+    placeholder="Select a font"
+    value="Teko"
+  />
+	<datalist id="googleFonts"></datalist>
+</div>
+
 
   <div class="control">
     <label>Top image URL</label>
@@ -128,31 +138,67 @@
 </div>
 
 <script>
+/* =========================
+   Google Font Const
+========================= */
+
+	const GOOGLE_FONTS = [
+  "Teko",
+  "Inter",
+  "Roboto",
+  "Montserrat",
+  "Poppins",
+  "Oswald",
+  "Nunito",
+  "Lato",
+  "Bebas Neue",
+  "Fira Sans",
+  "DM Sans",
+  "Playfair Display",
+  "Source Sans 3",
+  "Rubik",
+  "Mulish",
+  "Archivo"
+];
+
+const fontList = document.getElementById("googleFonts");
+
+GOOGLE_FONTS.forEach(font => {
+  const option = document.createElement("option");
+  option.value = font;
+  fontList.appendChild(option);
+});
+
+	const fontFamily = document.getElementById("fontFamily");
 const iframe = document.getElementById("preview");
 
-/* =========================
-   Google Font Loader
-========================= */
-function loadGoogleFont(fontName) {
-  const doc = iframe.contentWindow.document;
-  const head = doc.head;
+function loadGoogleFont(doc, font) {
+  const id = "googleFontLink";
 
-  const id = "google-font-loader";
   let link = doc.getElementById(id);
+  if (link) link.remove();
 
-  const formatted = fontName.trim().replace(/\s+/g, "+");
+  link = doc.createElement("link");
+  link.id = id;
+  link.rel = "stylesheet";
+  link.href = `https://fonts.googleapis.com/css2?family=${font.replace(/ /g, "+")}:wght@300;400;500;600;700&display=swap`;
 
-  if (!link) {
-    link = doc.createElement("link");
-    link.id = id;
-    link.rel = "stylesheet";
-    head.appendChild(link);
-  }
-
-  link.href = `https://fonts.googleapis.com/css2?family=${formatted}:wght@300;400;500;600;700&display=swap`;
-
-  setVar("--font-family", `'${fontName}', sans-serif`);
+  doc.head.appendChild(link);
 }
+
+	fontFamily.oninput = e => {
+  const font = e.target.value;
+  if (!font) return;
+
+  const doc = iframe.contentWindow.document;
+
+  loadGoogleFont(doc, font);
+
+  doc.documentElement.style.setProperty(
+    "--chat-font",
+    `'${font}', sans-serif`
+  );
+};
 
 /* =========================
    Helpers
@@ -174,6 +220,13 @@ function downloadFile(name, content) {
    Preview bindings
 ========================= */
 iframe.addEventListener("load", () => {
+
+const initialFont = fontFamily.value;
+if (initialFont) {
+  loadGoogleFont(iframe.contentWindow.document, initialFont);
+  setVar("--font-family", `'${initialFont}', sans-serif`);
+}
+	
   bgColor.oninput = e =>
     iframe.contentWindow.document.body.style.background = e.target.value;
 
@@ -189,10 +242,6 @@ iframe.addEventListener("load", () => {
   userBg.oninput = e => setVar("--username-bg", e.target.value);
   messageBg.oninput = e => setVar("--message-bg", e.target.value);
   topImage.oninput = e => setVar("--top-image", `url("${e.target.value}")`);
-
-  googleFont.onchange = e => {
-    if (e.target.value.trim()) loadGoogleFont(e.target.value);
-  };
 
   spamOnce.onclick = () => iframe.contentWindow.addMessage();
 });
