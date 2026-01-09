@@ -121,7 +121,7 @@ body {
 		width: 10;
 		height: 0;
 		border: 31px solid transparent;
-		border-right-color: #dfe6e9;
+		border-right-color: var(--message-bg);
 		border-left: 0;
 		border-top: 0;
 		margin-top: -15.5px;
