@@ -32,7 +32,9 @@ Top image (badge / decoration)
 
 Changes update live in the preview on the right.
 
-3️⃣ Font Setup (IMPORTANT)
+---
+
+## 3️⃣ Font Setup (IMPORTANT)
 You can use any CSS font, including Google Fonts.
 
 ---
