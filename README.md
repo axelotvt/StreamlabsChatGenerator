@@ -10,7 +10,7 @@ You can preview changes live, tweak colors, fonts, and layout, then download the
 1️⃣ Open the Generator
 
 Deployed here:  
-👉 https://axelotvt.github.io/YoutubeTrendsCleaner/
+👉 https://axelotvt.github.io/StreamlabsChatGenerator/
 
 2️⃣ Customize Your Chat
 
